@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import useFetch from "./hooks/useFetch";
+import useDark from "./hooks/useDark";
+import usePositionYX from "./hooks/usePositionYX";
+import useCountDown from "./hooks/useCountDown";
+import ScrollDirections from "./components/scroll-directions";
+import ThemeButton from "./components/theme-button";
+import Countdown from "./components/countdown";
+import FetchData from "./components/fetch-data";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const { data, loading } = useFetch("https://randomuser.me/api/");
+  const [theme, toggleTheme] = useDark();
+  const position = usePositionYX();
+  const { countdownLoading, countdown } = useCountDown(
+    "2021-12-31T00:00:00.889Z"
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={`App ${theme}`}>
+      <ScrollDirections position={position} />
+      <ThemeButton toggleTheme={toggleTheme} />
+      <Countdown countdownLoading={countdownLoading} countdown={countdown} />
+      <FetchData loading={loading} data={data} />
     </div>
   );
-}
+};
 
 export default App;
